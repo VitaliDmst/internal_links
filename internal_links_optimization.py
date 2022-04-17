@@ -4,11 +4,15 @@ import re
 from nltk import ngrams
 import string
 
+
+# screaming frog custom extraction (main content section)
 df = pd.read_csv('data/mo_html.csv')
 df = df.rename(columns={
     'Address': 'url',
     'text-body 1': 'html'})
 
+
+# semrush keywords data
 semrush_data = pd.read_csv('data/mo_kw.csv')
 #semrush normalization
 semrush_kw = pd.DataFrame({
