@@ -4,13 +4,11 @@ import re
 from nltk import ngrams
 import string
 
-
 # screaming frog custom extraction (main content section)
 df = pd.read_csv('data/mo_html.csv')
 df = df.rename(columns={
     'Address': 'url',
     'text-body 1': 'html'})
-
 
 # semrush keywords data
 semrush_data = pd.read_csv('data/mo_kw.csv')
@@ -19,6 +17,7 @@ semrush_kw = pd.DataFrame({
     'url': [],
     'kw': []
 })
+
 for page, page_data in semrush_data.groupby(by='URL', dropna=True, as_index=False):
     semrush_kw= semrush_kw.append({
         'url': page,
@@ -28,6 +27,7 @@ for page, page_data in semrush_data.groupby(by='URL', dropna=True, as_index=Fals
 all_data = df.join(semrush_kw.set_index('url'), on='url', how='outer')[['url', 'html', 'kw']]
 all_data = all_data.dropna(how='all')
 
+# output dataframe
 result = pd.DataFrame({
     'From': [],
     'To': [],
@@ -37,9 +37,14 @@ result = pd.DataFrame({
 for index, row in all_data.iterrows():
     try:
         soup = BeautifulSoup(row['html'], 'html.parser')
+
+        #remove all existing links from tree
+        for a in soup('a'):
+            a.decompose()
+
         # text normalization removing \n and spaces, and removing punctiations
         text = re.sub('\n', '', soup.text.strip()).lower()
-        text = text.translate(str.maketrans('','',string.punctuation))
+        text = text.translate(str.maketrans('', '', string.punctuation))
 
         for ind, i in all_data.iterrows():
             link_from = row['url']
@@ -55,10 +60,10 @@ for index, row in all_data.iterrows():
                             'To': link_to,
                             'Anchor': keyword
                         }, ignore_index=True)
-                        print(link_from, link_to, kw)
+                        print(link_from, link_to, keyword)
             except:
                 pass
     except:
         pass
 
-result.to_csv('rndpoint_result.csv')
+result.to_csv('mo.csv')
