@@ -4,18 +4,18 @@ import re
 from nltk import ngrams
 import string
 
-df = pd.read_csv('data/hd_html.csv')
+df = pd.read_csv('data/mo_kw.csv')
 df = df.rename(columns={
     'Address': 'url',
     'text-body 1': 'html'})
 
-semrush_data = pd.read_csv('data/semrush_kw.csv')
+semrush_data = pd.read_csv('data/rndpoint_kw.csv')
 #semrush normalization
 semrush_kw = pd.DataFrame({
     'url': [],
     'kw': []
 })
-for page, page_data in semrush_data.groupby(by='URL', dropna=True, as_index=False)['Keyword']:
+for page, page_data in semrush_data.groupby(by='URL', dropna=True, as_index=False):
     semrush_kw= semrush_kw.append({
         'url': page,
         'kw': ','.join(page_data['Keyword'])
@@ -34,7 +34,7 @@ for index, row in all_data.iterrows():
     try:
         soup = BeautifulSoup(row['html'], 'html.parser')
         # text normalization removing \n and spaces, and removing punctiations
-        text = re.sub('\n', '', soup.text.strip())
+        text = re.sub('\n', '', soup.text.strip()).lower()
         text = text.translate(str.maketrans('','',string.punctuation))
 
         for ind, i in all_data.iterrows():
@@ -51,9 +51,10 @@ for index, row in all_data.iterrows():
                             'To': link_to,
                             'Anchor': keyword
                         }, ignore_index=True)
+                        print(link_from, link_to, kw)
             except:
                 pass
     except:
         pass
 
-result.to_csv('result.csv')
+result.to_csv('rndpoint_result.csv')
