@@ -5,13 +5,13 @@ from nltk import ngrams
 import string
 
 # screaming frog custom extraction (main content section)
-df = pd.read_csv('data/mo_html.csv')
+df = pd.read_csv('data/hd_html.csv')
 df = df.rename(columns={
     'Address': 'url',
     'text-body 1': 'html'})
 
 # semrush keywords data
-semrush_data = pd.read_csv('data/mo_kw.csv')
+semrush_data = pd.read_csv('data/hd_kw.csv')
 #semrush normalization
 semrush_kw = pd.DataFrame({
     'url': [],
@@ -60,10 +60,10 @@ for index, row in all_data.iterrows():
                             'To': link_to,
                             'Anchor': keyword
                         }, ignore_index=True)
-                        print(link_from, link_to, keyword)
+                        # print(link_from, link_to, keyword)
             except:
                 pass
     except:
         pass
 
-result.to_csv('mo.csv')
+result.to_csv('hd.csv')
