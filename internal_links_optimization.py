@@ -9,19 +9,6 @@ df = df.rename(columns={
     'Address': 'url',
     'text-body 1': 'html'})
 
-# keywords = pd.read_csv('data/kw.csv')
-# keywords = keywords.rename(columns={
-#     'Address': 'url',
-#     'Unnamed 6': 'kw'})
-#
-# all_data = df.join(keywords.set_index('url'), on='url', how='left')[['url', 'html', 'kw']]
-# all_data = all_data.rename(columns={
-#     'Unnamed 6': 'kw'
-# })
-
-# semrush
-
-
 semrush_data = pd.read_csv('data/semrush_kw.csv')
 #semrush normalization
 semrush_kw = pd.DataFrame({
@@ -42,9 +29,6 @@ result = pd.DataFrame({
     'To': [],
     'Anchor': []
 })
-
-# for i in all_data.iterrows():
-#     print(i)
 
 for index, row in all_data.iterrows():
     try:
@@ -67,8 +51,6 @@ for index, row in all_data.iterrows():
                             'To': link_to,
                             'Anchor': keyword
                         }, ignore_index=True)
-                        # print(link_from, link_to, keyword)
-                        # print(result)
             except:
                 pass
     except:
