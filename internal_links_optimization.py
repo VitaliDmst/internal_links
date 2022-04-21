@@ -37,10 +37,14 @@ result = pd.DataFrame({
 for index, row in all_data.iterrows():
     try:
         soup = BeautifulSoup(row['html'], 'html.parser')
+        # find all link on main content
+        page_links = [a['href'] for a in soup.find_all('a') if '#' not in a]
 
         #remove all existing links from tree
         for a in soup('a'):
             a.decompose()
+
+        print(page_links)
 
         # text normalization removing \n and spaces, and removing punctiations
         text = re.sub('\n', '', soup.text.strip()).lower()
@@ -54,16 +58,17 @@ for index, row in all_data.iterrows():
                 for keyword in kw.split(','):
                     kw_len = len(keyword.split())
                     grams = [' '.join(q) for q in ngrams(text.split(), kw_len)]
-                    if keyword in grams and link_from != link_to:
+                    # check if keyword in text and it is not self-referencing and page don't have link to target page yet
+                    if keyword in grams and link_from != link_to and link_to not in page_links:
                         result = result.append({
                             'From': link_from,
                             'To': link_to,
                             'Anchor': keyword
                         }, ignore_index=True)
-                        # print(link_from, link_to, keyword)
+                        print(link_from, link_to, keyword)
             except:
                 pass
     except:
         pass
 
-result.to_csv('hd.csv')
+# result.to_csv('hd_links.csv')
