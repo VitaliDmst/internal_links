@@ -83,19 +83,19 @@ create_redirects_map()
 
 
 
-for page in zip_old:
-    old_page = urlparse(zip_old[page]).path
-    new_page = ",".join([urlparse(zip_new[i]).path for i in difflib.get_close_matches(page, zip_new)])
-    # new_page = [urlparse(zip_old[i]).path for i in difflib.get_close_matches(page, zip_old)]
-
-    if new_page == "":
-        new_page = "same"
-
-    result = result.append({
-        'From': old_page,
-        'To': new_page
-    }, ignore_index=True)
-
-
-# print(result)
-result.to_csv('redirect_map.csv')
+# for page in zip_old:
+#     old_page = urlparse(zip_old[page]).path
+#     new_page = ",".join([urlparse(zip_new[i]).path for i in difflib.get_close_matches(page, zip_new)])
+#     # new_page = [urlparse(zip_old[i]).path for i in difflib.get_close_matches(page, zip_old)]
+#
+#     if new_page == "":
+#         new_page = "same"
+#
+#     result = result.append({
+#         'From': old_page,
+#         'To': new_page
+#     }, ignore_index=True)
+#
+#
+# # print(result)
+# result.to_csv('redirect_map.csv')
