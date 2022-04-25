@@ -36,8 +36,15 @@ def create_redirects_map(old: pd.DataFrame,
     :return:
     """
 
-    old = list(old['Address'])
-    new = list(new['Address'])
+
+    if indexation_status == True:
+        old = list(old[(old['Status Code'] == 200) &
+                  ((old['Coverage'] == 'Submitted and indexed') |
+                  (old['Coverage'] == 'Indexed, not submitted in sitemap'))]['Address'])
+        new = list(new['Address'])
+    else:
+        old = list(old['Address'])
+        new = list(new['Address'])
 
     result = pd.DataFrame({
         'From': [],
@@ -74,9 +81,7 @@ def create_redirects_map(old: pd.DataFrame,
     result.to_csv(f'{output_filename}.csv')
     # print(result)
 
-create_redirects_map(old, new, True, True, 'qq')
-
-create_redirects_map()
+create_redirects_map(new, old, 'qe', False, True)
 
 
 
